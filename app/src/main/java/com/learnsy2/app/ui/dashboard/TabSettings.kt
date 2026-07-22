@@ -342,7 +342,7 @@ fun TabSettings(
                     DashboardIcon(name = "book", size = 22.dp, color = Color(0xFFF472B6))
                 }
                 Column {
-                    Text(text = "Learnsy", fontSize = 17.sp, fontWeight = FontWeight.Black, color = C.fg, fontFamily = Baloo2FontFamily)
+                    Text(text = "Learnsy Plus", fontSize = 17.sp, fontWeight = FontWeight.Black, color = C.fg, fontFamily = Baloo2FontFamily)
                     Text(text = "Nền tảng học tập · v24.5", fontSize = 11.sp, color = C.sub, fontFamily = NunitoFontFamily)
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                         Text(text = "Made with", fontSize = 10.sp, color = C.accent, fontWeight = FontWeight.Bold, fontFamily = NunitoFontFamily)

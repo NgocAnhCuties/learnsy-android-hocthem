@@ -204,7 +204,7 @@ fun DashboardScreen(
                         )
                     }
                     Text(
-                        text = "Learnsy",
+                        text = "Learnsy Plus",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Black,
                         color = C.fg,
