@@ -131,7 +131,7 @@ fun ListeningDetailScreen(
             ) {
                 DashboardIcon(name = "graduationCap", size = 15.dp, color = Color(0xFF6366F1))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(text = "Learnsy", fontSize = 13.sp, fontWeight = FontWeight.Black, color = Color(0xFF6366F1), fontFamily = NunitoFontFamily)
+                Text(text = "Learnsy Plus", fontSize = 11.sp, fontWeight = FontWeight.Black, color = Color(0xFF6366F1), fontFamily = NunitoFontFamily)
             }
 
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
