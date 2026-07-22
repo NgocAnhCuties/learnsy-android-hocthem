@@ -164,7 +164,7 @@ private fun DrawScope.drawLearnsyMark(
         val fontSizeSp = (textHeightPx * 1.05f / density).sp
 
         val layoutResult = textMeasurer.measure(
-            text = "Learnsy",
+            text = "Learnsy Plus",
             style = TextStyle(
                 fontFamily = NunitoFontFamily,
                 fontWeight = FontWeight.SemiBold,
