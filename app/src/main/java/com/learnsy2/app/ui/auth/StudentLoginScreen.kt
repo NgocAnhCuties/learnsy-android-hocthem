@@ -145,8 +145,8 @@ fun StudentLoginScreen(
                     }
                     Column(horizontalAlignment = Alignment.Start) {
                         Text(
-                            text = "Learnsy",
-                            fontSize = 26.sp,
+                            text = "Learnsy Plus",
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Black,
                             color = primary,
                             fontFamily = NunitoFontFamily
