@@ -152,7 +152,7 @@ fun GameLoadingScreen(
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(text = "Learnsy", fontSize = 22.sp, fontWeight = FontWeight.Black, color = primary, fontFamily = NunitoFontFamily)
+                Text(text = "Learnsy Plus", fontSize = 19.sp, fontWeight = FontWeight.Black, color = primary, fontFamily = NunitoFontFamily)
                 Text(text = label, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = tSub, fontFamily = NunitoFontFamily)
             }
 
