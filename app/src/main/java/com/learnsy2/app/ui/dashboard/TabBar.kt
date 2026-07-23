@@ -148,7 +148,7 @@ fun TabBar(
  * hiện trên màn hình) mỗi frame.
  */
 @Composable
-private fun rememberBlinkAlpha(delayMillis: Int): androidx.compose.runtime.State<Float> {
+internal fun rememberBlinkAlpha(delayMillis: Int): androidx.compose.runtime.State<Float> {
     val transition = rememberInfiniteTransition(label = "blink")
     return transition.animateFloat(
         initialValue = 1f,
