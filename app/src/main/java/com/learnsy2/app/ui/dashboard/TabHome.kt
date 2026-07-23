@@ -546,7 +546,8 @@ private fun LessonCard(
                         text = lesson.title,
                         color = C.fg,
                         fontSize = 14.sp,
-                        liteMode = liteMode
+                        liteMode = liteMode,
+                        flickerFx = flickerFx
                     )
                 }
                 // Nút "Tải về" thủ công — chỉ đánh dấu, nội dung đã tự cache
