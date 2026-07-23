@@ -39,6 +39,11 @@ jobs:
           restore-keys: |
             gradle-
 
+      - name: Decode release keystore
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
+          echo "Kích thước file keystore sau decode: $(wc -c < app/release.keystore) bytes"
+
       - name: Write local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
@@ -50,9 +55,12 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # ----- ĐÃ XÓA BƯỚC SIGN RELEASE WITH DEBUG KEYSTORE Ở ĐÂY -----
-
       - name: Build release APK
+        env:
+          RELEASE_STORE_FILE: ${{ github.workspace }}/app/release.keystore
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: ./gradlew assembleRelease --stacktrace
 
       - uses: actions/upload-artifact@v4
