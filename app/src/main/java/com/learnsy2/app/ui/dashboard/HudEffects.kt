@@ -41,10 +41,12 @@ import com.learnsy2.app.ui.theme.NunitoFontFamily
 /**
  * ── GlitchText ──
  * Tương đương function GlitchText({children,color,liteMode}) trong dashboard.jsx.
- * Bản web dùng 2 layer text lệch màu đỏ/lam chạy clip-path animation để tạo
- * hiệu ứng "hư hình" kiểu HUD sci-fi. Compose không có clip-path animation
- * built-in dễ dùng như CSS, nên ta mô phỏng bằng cách dịch chuyển 2 layer
- * text nhẹ theo trục X với BlendMode.Screen — hiệu ứng thị giác tương đương.
+ *
+ * ĐÃ ĐỔI: bỏ hiệu ứng "hư hình" 2 layer lệch màu đỏ/lam kiểu HUD sci-fi cũ.
+ * Giờ chỉ còn 1 layer text, chớp nháy bằng alpha — dùng đúng cùng đường cong
+ * animation với chấm/label active của TabBar (rememberBlinkAlpha: 1500ms,
+ * 1f → 0.55f → 1f, xem TabBar.kt) để tiêu đề bài học và thanh nav dưới
+ * "chớp" cùng nhịp, không còn đổi màu khi nhấp nháy.
  *
  * liteMode=true → chỉ render text thường (giữ hiệu năng máy yếu, đúng logic gốc).
  */
@@ -54,9 +56,10 @@ fun GlitchText(
     color: Color,
     fontSize: androidx.compose.ui.unit.TextUnit = 16.sp,
     liteMode: Boolean = false,
+    flickerFx: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    if (liteMode) {
+    if (liteMode || !flickerFx) {
         Text(
             text = text,
             color = color,
@@ -68,101 +71,19 @@ fun GlitchText(
         return
     }
 
-    val transition = rememberInfiniteTransition(label = "glitch")
+    // Cùng đường cong với rememberBlinkAlpha ở TabBar.kt (1500ms, 1f→0.55f→1f) —
+    // đọc .value trong graphicsLayer{} (draw phase) để không recompose cả
+    // GlitchText (hiện liên tục ở tiêu đề) mỗi frame.
+    val blinkAlpha = rememberBlinkAlpha(delayMillis = 0)
 
-    // Layer 1 — lệch đỏ, dao động ngang nhẹ theo chu kỳ 4s (tương đương hud-glitch-1)
-    // Giữ dạng State<Float>, KHÔNG "by" ở đây — nếu unwrap sớm thì GlitchText
-    // (dùng ở tiêu đề, hiện liên tục) sẽ bị recompose lại 60 lần/giây.
-    val offsetX1 = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 4000
-                0f at 0
-                -2f at 800
-                2f at 1600
-                -1f at 2400
-                1f at 3200
-                0f at 4000
-            }
-        ),
-        label = "glitchOffset1"
+    Text(
+        text = text,
+        color = color,
+        fontFamily = Baloo2FontFamily,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = fontSize,
+        modifier = modifier.graphicsLayer { alpha = blinkAlpha.value }
     )
-    val alpha1 = transition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 4000
-                1f at 0
-                1f at 720
-                0f at 800
-                1f at 880
-                1f at 4000
-            }
-        ),
-        label = "glitchAlpha1"
-    )
-
-    // Layer 2 — lệch lam, lệch pha 150ms so với layer 1 (tương đương hud-glitch-2)
-    val offsetX2 = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 4000
-                0f at 0
-                2f at 800
-                -2f at 1600
-                1f at 2400
-                -1f at 3200
-                0f at 4000
-            }
-        ),
-        label = "glitchOffset2"
-    )
-
-    Box(modifier = modifier) {
-        // Layer nền — text gốc luôn hiển thị rõ
-        Text(
-            text = text,
-            color = color,
-            fontFamily = Baloo2FontFamily,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = fontSize
-        )
-        // Layer glitch đỏ — alpha đọc trong cùng graphicsLayer{} (draw phase),
-        // KHÔNG dùng Modifier.alpha() rời vì đó là đọc eager ở composition phase.
-        Text(
-            text = text,
-            color = Color(0xFFFF5078).copy(alpha = 0.55f),
-            fontFamily = Baloo2FontFamily,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = fontSize,
-            modifier = Modifier
-                .graphicsLayer {
-                    translationX = offsetX1.value
-                    alpha = alpha1.value
-                    // Không dùng CompositingStrategy.Offscreen — không có blend mode
-                    // đặc biệt nào cần render target riêng ở đây, mà offscreen lại
-                    // tốn thêm 1 pass GPU hẳn hoi, đặc biệt nặng trên GPU Mali
-                    // (MediaTek/Exynos tầm trung) so với Adreno.
-                }
-        )
-        // Layer glitch lam
-        Text(
-            text = text,
-            color = Color(0xFF78A0FF).copy(alpha = 0.45f),
-            fontFamily = Baloo2FontFamily,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = fontSize,
-            modifier = Modifier
-                .graphicsLayer {
-                    translationX = offsetX2.value
-                }
-        )
-    }
 }
 
 /**
